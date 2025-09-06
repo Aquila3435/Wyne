@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WWW</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      background: #000;
+    }
+    canvas#heart {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(.77,0,.18,1);
+      pointer-events: none;
+    }
+    canvas#heart.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="heart"></canvas>
+  <div style="
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 16px;
+  ">
+    <button id="playMusic" style="
+      padding: 12px 32px;
+      font-size: 1.2em;
+      border-radius: 24px;
+      border: none;
+      background: #800000;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    ">
+      ▶ Play Me:)
+    </button>
+    <button id="stopMusic" style="
+      padding: 12px 32px;
+      font-size: 1.2em;
+      border-radius: 24px;
+      border: none;
+      background: #333;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: none;
+    ">
+      ■ Stop
+    </button>
+  </div>
+  <audio id="bgMusic" src="Yellow-Coldplay.mp3" loop></audio>
+  <script src="backend.js"></script>
+  <script>
+    // Hide heart canvas until play is pressed
+    document.getElementById('playMusic').onclick = function() {
+      document.getElementById('bgMusic').play();
+      var heart = document.getElementById('heart');
+      heart.classList.add('open');
+      this.style.display = 'none';
+      document.getElementById('stopMusic').style.display = 'inline-block';
+      // Start heart animation if not already started
+      if (typeof window.heartStarted === 'undefined') {
+        window.heartStarted = true;
+        if (typeof init === 'function') init();
+      }
+    };
+    document.getElementById('stopMusic').onclick = function() {
+      document.getElementById('bgMusic').pause();
+      document.getElementById('bgMusic').currentTime = 0;
+      var heart = document.getElementById('heart');
+      heart.classList.remove('open');
+      this.style.display = 'none';
+      document.getElementById('playMusic').style.display = 'inline-block';
+    };
+    // Prevent heart animation from auto-starting
+    window.heartStarted = false;
+  </script>
+</body>
+</html>
